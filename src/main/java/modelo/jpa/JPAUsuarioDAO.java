@@ -1,9 +1,14 @@
 package modelo.jpa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import modelo.dao.UsuarioDAO;
+import modelo.entidades.Movimiento;
 import modelo.entidades.Usuario;
 
 public class JPAUsuarioDAO extends JPAGenericDAO<Usuario, Integer> implements UsuarioDAO{
@@ -29,6 +34,19 @@ public class JPAUsuarioDAO extends JPAGenericDAO<Usuario, Integer> implements Us
 	        return usuarioAutorizado;
 	    } catch (NoResultException e) {
 	        return  null; 
+	    }
+	}
+	
+	@Override
+	public List<Usuario> getUsuarioByCorreo(String correo) {
+	    try {
+	        String jpql = "SELECT u FROM Usuario u " +
+	                      "WHERE u.nombre = :nombre";
+	        TypedQuery<Usuario> query = em.createQuery(jpql, Usuario.class);
+	        query.setParameter("nombre", correo);
+	        return query.getResultList();
+	    } catch (Exception e) {
+	        return new ArrayList<>(); 
 	    }
 	}
 
