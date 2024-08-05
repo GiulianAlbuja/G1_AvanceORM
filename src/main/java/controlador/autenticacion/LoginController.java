@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import modelo.dao.DAOFactory;
 import modelo.dao.UsuarioDAO;
 import modelo.entidades.Usuario;
+import utils.BCryptUtil;
 
 @WebServlet("/LoginController")
 public class LoginController extends HttpServlet {
@@ -96,11 +97,13 @@ public class LoginController extends HttpServlet {
 		// 1. Obtener datos que me env�an en la solicitud
 	    String nombre = request.getParameter("usuario");
 	    String password = request.getParameter("password");
+	 // Encriptar la contraseña con BCrypt
+	    String hashedPassword = BCryptUtil.hashPassword(password);
 
 	    // 3. Crear un objeto Cuenta con los datos obtenidos y el propietario obtenido de la sesion
 	 	    Usuario nuevoUsuario = new Usuario();
 	 	    nuevoUsuario.setNombre(nombre);
-	 	    nuevoUsuario.setPassword(password);
+	 	    nuevoUsuario.setPassword(hashedPassword);
 
 	 	    // 4. Obtener el CuentaDAO del DAO Factory
 	 	    UsuarioDAO usuarioDAO = DAOFactory.getFactory().getUsuarioDAO();
