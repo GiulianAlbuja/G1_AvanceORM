@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 import modelo.dao.UsuarioDAO;
 import modelo.entidades.Movimiento;
 import modelo.entidades.Usuario;
+import utils.BCryptUtil;
 
 public class JPAUsuarioDAO extends JPAGenericDAO<Usuario, Integer> implements UsuarioDAO{
 
@@ -22,18 +23,22 @@ public class JPAUsuarioDAO extends JPAGenericDAO<Usuario, Integer> implements Us
 
 	@Override
 	public Usuario autorizar(String nombre, String password) {
-		String sentenciaJPQL = "SELECT p FROM Usuario p WHERE p.nombre = :nombre AND p.password = :password ";
-		Query query = em.createQuery(sentenciaJPQL);
-		//Parametros
-		query.setParameter("nombre", nombre);
-		query.setParameter("password", password);
-		
-		
-		try {
+		 // Buscar al usuario por nombre
+	    String sentenciaJPQL = "SELECT p FROM Usuario p WHERE p.nombre = :nombre";
+	    Query query = em.createQuery(sentenciaJPQL);
+	    query.setParameter("nombre", nombre);
+
+	    try {
 	        Usuario usuarioAutorizado = (Usuario) query.getSingleResult();
-	        return usuarioAutorizado;
+	        boolean passwordMatch = BCryptUtil.checkPassword(password, usuarioAutorizado.getPassword());
+
+	        if (passwordMatch) {
+	            return usuarioAutorizado;
+	        } else {
+	            return null;
+	        }
 	    } catch (NoResultException e) {
-	        return  null; 
+	        return null;
 	    }
 	}
 	
