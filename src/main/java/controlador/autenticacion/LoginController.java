@@ -111,7 +111,7 @@ public class LoginController extends HttpServlet {
 					+ "<p style='font-size: 12px; color: #777;'>Este es un mensaje generado automáticamente, por favor no responda a este correo.</p>"
 					+ "</div>";
 
-			CreateEmailOptions params = CreateEmailOptions.builder().from("Acme <onboarding@resend.dev>").to(nombre)
+			CreateEmailOptions params = CreateEmailOptions.builder().from("info@slayther.lat").to(nombre)
 					.subject("Código de verificación - Chaucherita").html(htmlContent).build();
 
 			try {
